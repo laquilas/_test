@@ -19,7 +19,7 @@ jobs:
       steps:
         - uses: actions/checkout@v2
           with:
-            fetch-depth: 0
+            fetch-depth: 1
 
         - name: Set up Python 3.9
           uses: actions/setup-python@v2
@@ -31,6 +31,11 @@ jobs:
           run: |
             echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
             echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .py$ | xargs)"
+
+        - name: Changed Itms
+          run: |
+            for changed_file in ${{ steps.files.outputs.all }}; do
+              echo "Do something with this ${changed_file}."
 
         - name: Install dependencies
           run: |
