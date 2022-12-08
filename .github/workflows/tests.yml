@@ -32,10 +32,9 @@ jobs:
             echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
             echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .py$ | xargs)"
 
-        - name: Changed Items
-          id: files
+        - id: files
           uses: jitterbit/get-changed-files@v1
-          run: |
+        - run: |
             for changed_file in ${{ steps.files.outputs.all }}; do
               echo "Do something with this ${changed_file}."
 
