@@ -35,7 +35,7 @@ jobs:
         - id: files
           uses: jitterbit/get-changed-files@v1
         - run: |
-            echo ${{ steps.files.outputs.all }} | cut "/" -f1 | sort | uniq
+            cat ${{ steps.files.outputs.all }} | cut "/" -f1 | sort | uniq
             
             for changed_file in {${{ steps.files.outputs.all }}}; do
               echo "Do something with this ${changed_file}."
