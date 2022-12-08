@@ -34,3 +34,18 @@ jobs:
         - name: Test example02
           run: |
               pytest -v example02/py_test.py              
+
+
+        - name: Display the path
+          run: |
+            import os
+            print(os.environ['PATH'])
+          shell: python
+
+        - name: 
+          run: |
+            echo ${{ github.ref }}
+            echo ${{ github.head_ref || github.run_id }}
+            echo ${{ github.workflow }}-${{ github.ref }}
+
+              
