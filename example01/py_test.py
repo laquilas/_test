@@ -8,8 +8,11 @@ def test_foo_bar2():
 
 def test_foo_bar3():
    assert True
-   
+
 def test_foo_bar4():
+   assert True
+
+def test_foo_bar5():
    assert True
 
 if __name__ == "__main__":
