@@ -34,7 +34,6 @@ jobs:
 
         - id: files
           uses: jitterbit/get-changed-files@v1
-            format: 'py'
         - run: |
             cat ${{ steps.files.outputs.all }} | cut "/" -f1 | sort | uniq >> folders.txt
             echo folders.txt
