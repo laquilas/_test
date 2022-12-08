@@ -15,7 +15,7 @@ jobs:
       # Map a step output to a job output
       outputs:
         all: ${{ steps.changes.outputs.all}}
-        ts: ${{ steps.changes.outputs.ts }}      
+        ts: ${{ steps.changes.outputs.py }}      
       steps:
         - uses: actions/checkout@v2
           with:
@@ -30,7 +30,7 @@ jobs:
           id: changes
           run: |
             echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
-            echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .ts$ | xargs)"
+            echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .py$ | xargs)"
 
         - name: Install dependencies
           run: |
