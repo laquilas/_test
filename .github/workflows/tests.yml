@@ -34,8 +34,11 @@ jobs:
 
         - id: files
           uses: jitterbit/get-changed-files@v1
+            format: 'py'
         - run: |
-            for changed_file in ${{ steps.files.outputs.all }}; do
+            cat ${{ steps.files.outputs.all }} | cut "/" -f1 | sort | uniq >> folders.txt
+            echo folders.txt
+            for changed_file in {${{ steps.files.outputs.all }}}; do
               echo "Do something with this ${changed_file}."
 
         - name: Install dependencies
