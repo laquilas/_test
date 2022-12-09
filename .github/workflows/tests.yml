@@ -34,9 +34,10 @@ jobs:
 
         - id: files
           uses: jitterbit/get-changed-files@v1
-            format: 'py'
         - run: |
+
             for changed_file in {${{ steps.files.outputs.all }}}; do
+              if changed_file
               echo "Do something with this ${changed_file}."
               done
 
@@ -46,7 +47,9 @@ jobs:
               if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
         - name: Test example01
+          uses: jitterbit/get-changed-files@v1
           run: |
+              va=$(python3 path_folder.py ${{ steps.files.outputs.all }} example01)
               pytest -v example01/py_test.py
 
         - name: Test example02
