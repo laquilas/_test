@@ -35,9 +35,7 @@ jobs:
         - id: files
           uses: jitterbit/get-changed-files@v1
         - run: |
-            va=$(python3 path_folder.py ${{ steps.files.outputs.all }} example01)
-
-            echo $va
+            echo {${{ steps.files.outputs.all }}}
 
             for changed_file in {${{ steps.files.outputs.all }}}; do
               if changed_file
