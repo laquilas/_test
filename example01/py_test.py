@@ -13,7 +13,5 @@ def test_foo_bar4():
    assert True
 
 
-
-
 if __name__ == "__main__":
     test_foo_bar1()
