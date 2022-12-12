@@ -40,6 +40,7 @@ jobs:
             for changed_file in {${{ steps.files.outputs.all }}}; do
               if changed_file
               echo "Do something with this ${changed_file}."
+              fi
               done
 
         - name: Install dependencies
