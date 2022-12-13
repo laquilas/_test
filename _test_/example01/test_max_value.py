@@ -8,6 +8,7 @@ def test_foo_bar1():
    array = [1,2,3,4,5,6]
    assert max_value(array) == 6
 
+
 def test_foo_bar2():
    array = [1,7,3,4,5,6]
    assert max_value(array) == 7
