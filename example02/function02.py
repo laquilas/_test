@@ -9,6 +9,7 @@ def prod_array(array):
 
 
 if __name__ == "__main__":
+   
    array  = [10,20,30,40,50,60]
    print(sum_array(array))
    print(prod_array(array))
