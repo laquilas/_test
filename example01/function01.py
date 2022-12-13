@@ -4,6 +4,7 @@ def max_value(array):
     return np.max(array)
 
 def min_value(array):
+    # Test
     return np.min(array)
     
 if __name__ == "__main__":
