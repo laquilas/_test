@@ -12,6 +12,7 @@ with open('files.txt') as f:
 
 print(data)
 new_data = check_folder(data)
+print(new_data)
 
 with open("files_flag.txt", 'w') as f:
     for row in new_data:
