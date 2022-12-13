@@ -40,9 +40,14 @@ jobs:
         - name: List all changed files
           run: |
             for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-              echo "$file was changed"
+              echo "$file" >> files.txt
             done
 
+        - name: Check files for test
+          run: |
+            python _test_/check_folder.py
+
+            
         - name: Test example01 Max
           run: |
               pytest -v _test_/example01/test_max_value.py
