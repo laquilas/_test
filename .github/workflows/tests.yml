@@ -47,24 +47,23 @@ jobs:
           run: |
             python _test_/check_folder.py
 
-            
+
         - name: Test example01 Max
           run: |
-              pytest -v _test_/example01/test_max_value.py
-              
+              if [ cat files_flag.txt | grep 'example01' ]; then pytest -v _test_/example01/test_max_value.py; fi
 
         - name: Test example01 Min
           run: |
-              pytest -v _test_/example01/test_min_value.py
+              if [ cat files_flag.txt | grep 'example01' ]; then pytest -v _test_/example01/test_min_value.py; fi
 
         - name: Test example02 Max
           run: |
-              pytest -v _test_/example02/test_prod_array.py
-              
+              if [ cat files_flag.txt | grep 'example02' ]; then pytest -v _test_/example02/test_prod_array.py; fi
 
         - name: Test example02 Min
           run: |
-              pytest -v _test_/example02/test_sum_array.py
+              if [ cat files_flag.txt | grep 'example02' ]; then pytest -v _test_/example02/test_sum_array.py; fi
+              
 
         - name: Display the path
           run: |
