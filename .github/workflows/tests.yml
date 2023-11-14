@@ -1,114 +1,44 @@
-
-name: Continuous integration
+name: Auto-approve PRs with passing reviews and checks
 
 on:
-  push:
-    branches:
-    - main
   pull_request:
-    branches:
-    - main
+    types: [closed, reopened]
+    branches: [main]
 
 jobs:
-  pipeline:
-      runs-on: ubuntu-latest
-      # Map a step output to a job output
-      outputs:
-        all: ${{ steps.changes.outputs.all}}
-        ts: ${{ steps.changes.outputs.py }}      
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            fetch-depth: 1
+  auto-approve:
+    runs-on: ubuntu-latest
 
-        - name: Set up Python 3.9
-          uses: actions/setup-python@v2
-          with:
-              python-version: 3.9
-
-        - name: Install dependencies
-          run: |
-              python -m pip install --upgrade pip
-              if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-
-        # Example 1
-        - name: Get changed files
-          id: changed-files
-          uses: tj-actions/changed-files@v34
-
-        - name: List all changed files
-          run: |
-            for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-              echo "$file" >> files.txt
-            done
-
-        - name: Check files for test
-          run: |
-            python _test_/check_folder.py
-
-
-        - name: Test example01 Max
-          run: |
-              if [ cat files_flag.txt | grep 'example01' ]; then pytest -v _test_/example01/test_max_value.py; fi
-
-        - name: Test example01 Min
-          run: |
-              if [ cat files_flag.txt | grep 'example01' ]; then pytest -v _test_/example01/test_min_value.py; fi
-
-        - name: Test example02 Max
-          run: |
-              if [ cat files_flag.txt | grep 'example02' ]; then pytest -v _test_/example02/test_prod_array.py; fi
-
-        - name: Test example02 Min
-          run: |
-              if [ cat files_flag.txt | grep 'example02' ]; then pytest -v _test_/example02/test_sum_array.py; fi
-              
-
-        - name: Display the path
-          run: |
-            import os
-            print(os.environ['PATH'])
-          shell: python
-
-        - name: 
-          run: |
-            echo ${{ github.ref }}
-            echo ${{ github.head_ref || github.run_id }}
-            echo ${{ github.workflow }}-${{ github.ref }}
-            echo ${{ github.action }}
-            echo ${{ github.action_path }}
-            echo ${{ github.action_repository }}
-            echo ${{ github.action_status }}
-            echo ${{ github.actor }}
-            echo ${{ github.api_url }}
-            echo ${{ github.base_ref }}
-            echo ${{ github.env }}
-            echo ${{ github.event_name }}
-            echo ${{ github.event_path }}
-            echo ${{ github.graphql_url }}            
-            echo ${{ github.head_ref }}
-            echo ${{ github.job }}
-            echo ${{ github.ref }}
-            echo ${{ github.ref_name }}
-            echo ${{ github.ref_protected }}
-            echo ${{ github.ref_type }}
-            echo ${{ github.path }}
-            echo ${{ github.repository }}
-            echo ${{ github.repository_owner }}
-            echo ${{ github.repositoryUrl }}
-            echo ${{ github.retention_days }}
-            echo ${{ github.run_id }}
-            echo ${{ github.run_number }}
-            echo ${{ github.run_attempt }}
-            echo ${{ github.server_url }} 
-            echo ${{ github.sha }}
-            echo ${{ github.token }}
-            echo ${{ github.triggering_actor }}
-            echo ${{ github.workflow }}
-            echo ${{ github.workspace }}
-
-
-            
-
-            
+    steps:
+      - name: Check for reviews
+        uses: actions/github-script@v6
+        with:
+          script: |
+            if (context.payload.pull_request.requested_reviewers.length === 0 || context.payload.pull_request.requested_reviewers.every(reviewer => reviewer.state === 'APPROVED')) {
+              console.log('All reviewers have approved, proceeding to check for passing checks.');
+            } else {
+              console.log('Not all reviewers have approved, skipping auto-approval.');
+              exit();
+            }
+      - name: Check for passing checks
+        uses: actions/github-script@v6
+        with:
+          script: |
+            if (context.payload.pull_request.checks.every(check => check.status === 'completed' && check.conclusion === 'success')) {
+              console.log('All checks have passed, approving pull request.');
+            } else {
+              console.log('Not all checks have passed, skipping auto-approval.');
+              exit();
+            }
+      - name: Approve pull request
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.pullRequests.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              review: {
+                state: 'APPROVED'
+              }
+            });
