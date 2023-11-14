@@ -1,9 +1,12 @@
 name: Auto-approve PRs with passing reviews and checks
 
 on:
+  push:
+    branches:
+    - main
   pull_request:
-    types: [closed, reopened]
-    branches: [main]
+    branches:
+    - main
 
 jobs:
   auto-approve:
